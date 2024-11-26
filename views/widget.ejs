@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Support Chat</title>
+    <style>
+      .chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        height: 500px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      .chat-header {
+        background: #2563eb;
+        color: white;
+        padding: 15px;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .message {
+        max-width: 80%;
+        padding: 10px;
+        border-radius: 10px;
+        margin: 5px 0;
+      }
+
+      .user-message {
+        background: #e5e7eb;
+        align-self: flex-end;
+      }
+
+      .admin-message {
+        background: #dbeafe;
+        align-self: flex-start;
+      }
+
+      .chat-input {
+        padding: 15px;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 10px;
+      }
+
+      .chat-input input {
+        flex: 1;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 5px;
+        outline: none;
+      }
+
+      .chat-input button {
+        padding: 8px 15px;
+        background: #2563eb;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+
+      .chat-input button:hover {
+        background: #1d4ed8;
+      }
+
+      .typing-indicator {
+        padding: 5px 15px;
+        color: #6b7280;
+        font-style: italic;
+      }
+
+      @media screen and (max-width: 768px) {
+        .chat-widget {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          width: 100%;
+          height: 100%;
+          border-radius: 0;
+        }
+
+        .chat-header {
+          font-size: 1.2rem;
+          padding: 20px;
+        }
+
+        .chat-messages {
+          padding: 10px;
+        }
+
+        .chat-input {
+          padding: 10px;
+        }
+
+        .chat-input input {
+          padding: 12px;
+          font-size: 1rem;
+        }
+
+        .chat-input button {
+          padding: 12px 20px;
+          font-size: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-widget">
+      <div class="chat-header">
+        <span><%= name %></span>
+        <span class="close-btn" style="cursor: pointer">×</span>
+      </div>
+      <div class="chat-messages" id="messageContainer"></div>
+      <div class="typing-indicator" id="typingIndicator"></div>
+      <div class="chat-input">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Type your message..."
+        />
+        <button id="sendButton">Send</button>
+      </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const messageInput = document.getElementById("messageInput");
+      const sendButton = document.getElementById("sendButton");
+      const messageContainer = document.getElementById("messageContainer");
+      const typingIndicator = document.getElementById("typingIndicator");
+
+      // Use EJS to pass the server-side "name" variable to JavaScript
+      const username = "<%= name %>";
+
+      // Generate a random username for demo purposes
+      // const username = 'User_' + Math.floor(Math.random() * 1000);
+      const room = "default_room";
+
+      // Join room
+      socket.emit("join_room", {
+        username,
+        room,
+        user_type_id: 1,
+      });
+
+      // Send message
+      function sendMessage() {
+        const message = messageInput.value.trim();
+        if (message) {
+          const messageData = {
+            message,
+            username,
+            room,
+            __createdtime__: Date.now(),
+            user_type_id: 1,
+          };
+          socket.emit("send_message", messageData);
+          messageInput.value = "";
+        }
+      }
+
+      sendButton.onclick = sendMessage;
+      messageInput.onkeypress = (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+        socket.emit("is_typing", { username, room });
+      };
+
+      // Receive message
+      socket.on("receive_message", (data) => {
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${
+          data.username === username ? "user-message" : "admin-message"
+        }`;
+        messageDiv.textContent = `${
+          data.username === username ? "You" : data.username
+        }: ${data.message}`;
+        messageContainer.appendChild(messageDiv);
+        messageContainer.scrollTop = messageContainer.scrollHeight;
+      });
+
+      // Typing indicator
+      socket.on("typing", (data) => {
+        if (data.username !== username) {
+          typingIndicator.textContent = `${data.username} is typing...`;
+          setTimeout(() => {
+            typingIndicator.textContent = "";
+          }, 1000);
+        }
+      });
+
+      // Close button functionality
+      document.querySelector(".close-btn").onclick = () => {
+        socket.emit("leave_room", { username, room, user_type_id: 1 });
+        // Here you might want to hide the widget instead of closing it
+        document.querySelector(".chat-widget").style.display = "none";
+      };
+    </script>
+  </body>
+</html>
