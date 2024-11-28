@@ -1,10 +1,12 @@
 const express = require("express");
+const compression = require('compression');
 const path = require("path");
 // const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 
 // Middleware
+app.use(compression())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
