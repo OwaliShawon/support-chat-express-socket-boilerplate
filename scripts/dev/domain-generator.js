@@ -13,6 +13,7 @@ const createDomain = async (domainName) => {
         $`touch ${domainName}/api.js`,
         $`touch ${domainName}/event.js`,
         $`touch ${domainName}/index.js`,
+        $`touch ${domainName}/routes.js`,
         $`touch ${domainName}/dto.js`,
         $`touch ${domainName}/schema.js`,
         $`touch ${domainName}/service.js`,
