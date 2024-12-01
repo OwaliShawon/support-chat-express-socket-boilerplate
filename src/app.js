@@ -17,6 +17,11 @@ app.use("/js", express.static(path.join(__dirname, "../public/js")));
 // Routes
 // app.use('/chat', chatRoutes);
 
+  // health check
+  app.get('/health', (req, res) => {
+    res.status(200).send('OK');
+  });
+
 app.get("/widget", (req, res) => {
   res.render("widget", { name: req.query.name });
 });
