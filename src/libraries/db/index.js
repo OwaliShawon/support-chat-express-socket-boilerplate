@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const logger = require("../log/logger");
 const Config = require("../../configs");
 
 const connectWithMongoDb = async () => {
@@ -12,27 +11,27 @@ const connectWithMongoDb = async () => {
 
   try {
     mongoose.connection.once("open", () => {
-      logger.info("MongoDB connection is open");
+      console.log("MongoDB connection is open");
     });
 
     mongoose.connection.on("error", (err) => {
-      logger.error("Error connecting to MongoDB: ", err);
+      console.log("Error connecting to MongoDB: ", err);
     });
 
     await mongoose.connect(MONGODB_URI);
 
-    logger.info("MongoDB connection established successfully");
+    console.log("MongoDB connection established successfully");
   } catch (error) {
-    logger.error("MongoDB connection error: ", error);
+    console.log("MongoDB connection error: ", error);
   }
 };
 
 const disconnectWithMongoDb = async () => {
   try {
     await mongoose.disconnect();
-    logger.info("Disconnected from MongoDB");
+    console.log("Disconnected from MongoDB");
   } catch (error) {
-    logger.error("Error disconnecting from MongoDB: ", error);
+    console.log("Error disconnecting from MongoDB: ", error);
   }
 };
 
