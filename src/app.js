@@ -1,7 +1,7 @@
 const express = require("express");
 const compression = require("compression");
 const path = require("path");
-const chatRouter = require("./domains/chats/routes");
+// const chatRoutes = require('./routes/chatRoutes');
 
 const app = express();
 
@@ -15,7 +15,7 @@ app.use("/css", express.static(path.join(__dirname, "../public/css")));
 app.use("/js", express.static(path.join(__dirname, "../public/js")));
 
 // Routes
-app.use("/api/v1", chatRouter);
+// app.use('/chat', chatRoutes);
 
 app.get("/widget", (req, res) => {
   res.render("widget", { name: req.query.name });
