@@ -1,11 +1,12 @@
 const express = require('express');
-const compression = require('compression');
 const path = require('path');
+const applyMiddleware = require('./middlewares');
+
+// Initialize the app
 const app = express();
-const helmet = require('helmet');
 
 // Middleware
-app.use([compression(), express.json(), express.urlencoded({ extended: true }), helmet()]);
+applyMiddleware(app);
 
 // Routes
 require('./routes')(app);
