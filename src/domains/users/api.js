@@ -1,9 +1,9 @@
-const service = require('./service');
+const userService = require('./userService');
 
 // Get all users
 const getUsers = async (req, res, next) => {
     try {
-        await service.getUsers(req, res, next);
+        await userService.getUsers(req, res, next);
     } catch (error) {
         next(error);
     }
@@ -11,7 +11,7 @@ const getUsers = async (req, res, next) => {
 
 const getUser = async (req, res, next) => {
     try {
-        await service.getUserById(req, res, next);
+        await userService.getUserById(req, res, next);
     } catch (error) {
         next(error);
     }
@@ -20,7 +20,7 @@ const getUser = async (req, res, next) => {
 // Create a user
 const createUser = async (req, res, next) => {
     try {
-        await service.createUsers(req, res, next);
+        await userService.createUsers(req, res, next);
     } catch (error) {
         next(error);
     }
@@ -29,7 +29,7 @@ const createUser = async (req, res, next) => {
 // Update user
 const updateUser = async (req, res, next) => {
     try {
-        await service.updateUser(req, res, next);
+        await userService.updateUser(req, res, next);
     } catch (error) {
         next(error);
     }
@@ -38,7 +38,7 @@ const updateUser = async (req, res, next) => {
 // Delete user
 const deleteUser = async (req, res, next) => {
     try {
-        await service.deleteUser(req, res, next);
+        await userService.deleteUser(req, res, next);
     } catch (error) {
         next(error);
     }
