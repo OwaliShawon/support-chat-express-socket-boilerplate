@@ -7,14 +7,7 @@ const swaggerDoc = YAML.load('./swagger.yaml');
 
 
 const applyMiddleware = (app) => {
-    // Core Middleware
-    app.use(express.json());
-    app.use(express.urlencoded({ extended: true }));
-    
-    // Security and Optimization
-    app.use(compression());
-    app.use(helmet());
-    
+    app.use([express.json(), express.urlencoded({ extended: true }), compression(), helmet()]);
     // API Documentation
     app.use('/docs', swaggerUI.serve, swaggerUI.setup(swaggerDoc));
 };

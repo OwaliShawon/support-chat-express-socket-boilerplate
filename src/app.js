@@ -5,10 +5,11 @@ const applyMiddleware = require('./middlewares');
 // Initialize the app
 const app = express();
 
-require('./routes')(app);
-
 // Middleware
 applyMiddleware(app);
+
+// Routes
+require('./routes')(app);
 
 // Static files
 app.use('/css', express.static(path.join(__dirname, '../public/css')));

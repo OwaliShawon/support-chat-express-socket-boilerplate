@@ -9,13 +9,45 @@ const getUsers = async (req, res, next) => {
     }
 };
 
+const getUser = async (req, res, next) => {
+    try {
+        await service.getUserById(req, res, next);
+    } catch (error) {
+        next(error);
+    }
+};
+
 // Create a user
-const createUser = async (req, res) => {
-    const { name, email } = req.body;
-    res.status(201).json({ message: 'User created', data: { name, email } });
+const createUser = async (req, res, next) => {
+    try {
+        await service.createUsers(req, res, next);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Update user
+const updateUser = async (req, res, next) => {
+    try {
+        await service.updateUser(req, res, next);
+    } catch (error) {
+        next(error);
+    }
+};
+
+// Delete user
+const deleteUser = async (req, res, next) => {
+    try {
+        await service.deleteUser(req, res, next);
+    } catch (error) {
+        next(error);
+    }
 };
 
 module.exports = {
     getUsers,
+    getUser,
     createUser,
+    updateUser,
+    deleteUser,
 };
