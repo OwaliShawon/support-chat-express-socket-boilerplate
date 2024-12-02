@@ -3,10 +3,12 @@ const compression = require('compression');
 const path = require('path');
 const app = express();
 const helmet = require('helmet');
-require('./routes')(app);
 
 // Middleware
 app.use([compression(), express.json(), express.urlencoded({ extended: true }), helmet()]);
+
+// Routes
+require('./routes')(app);
 
 // Static files
 app.use('/css', express.static(path.join(__dirname, '../public/css')));
