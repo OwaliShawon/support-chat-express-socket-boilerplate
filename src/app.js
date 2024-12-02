@@ -1,14 +1,15 @@
 const express = require('express');
 const path = require('path');
 const applyMiddleware = require('./middlewares');
+const logger = require('./libraries/log/logger');
 
 // Initialize the app
 const app = express();
 
-// Middleware
+logger.info('Applying middlewares');
 applyMiddleware(app);
 
-// Routes
+logger.info('Defining Routes');
 require('./routes')(app);
 
 // Static files

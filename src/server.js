@@ -4,13 +4,15 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { connectSocket } = require('./socket');
 const { connectWithMongoDb } = require('./libraries/db');
+const logger = require('./libraries/log/logger');
 
 const server = http.createServer(app);
 const io = new Server(server);
 
-// Attach Socket.io to the server
+logger.info('Connecting to MongoDB');
 connectWithMongoDb();
+logger.info('Connecting to Socket.io');
 connectSocket(io);
 
 const PORT = process.env.PORT || 3000;
-server.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
+server.listen(PORT, () => logger.info(`Server running on http://localhost:${PORT}`));
