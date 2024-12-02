@@ -1,0 +1,186 @@
+openapi: 3.0.0
+info:
+  version: '1.0.0'
+  title: 'Support Chat'
+  description: 'Support Chat Swagger API.'
+  contact:
+    name: Support Contact
+    url: https://google.com
+    email: support@chat.com
+servers:
+  - description: Dev
+    url: 'http://localhost:3000/api/v1'
+tags:
+  - name: Health
+    description: Health Check Endpoints
+  - name: Auth
+    description: Authentication Endpoints (public)
+  - name: User
+    description: User Endpoints (admin only)
+ 
+paths:
+  '/health':
+    get:
+      summary: Health Check
+      description: Provides the status of the application.
+      tags: [Health]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: UP
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: '2024-12-02T12:00:00Z'
+        '500':
+          $ref: '#/components/responses/500'
+  '/auth/login':
+    post:
+      description: create a new account
+      tags: [Auth]
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              type: object
+              properties:
+                userName:
+                  type: string
+                  example: Saif Uddin
+                email:
+                  type: string
+                  format: email
+                  example: mdsaifakib@gmail.com
+                password:
+                  type: string
+                  format: password
+                  example: PassWord123
+              required: [userName, email, password]
+      responses:
+        '201':
+          description: Login Successful!
+          content:
+            'application/json':
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: integer
+                    format: int32
+                    example: 201
+                  message:
+                    type: string
+                    example: Login Successful!
+                  data:
+                    type: object
+                    properties:
+                      key:
+                        type: string
+                        example: '64d268cdeef8c84bb18912db'
+                      chat:
+                        type: string
+                        example: 'http://localhost:3000/api/v1/chats/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVdCJ9'
+        '400':
+          $ref: '#/components/responses/400'
+        '500':
+          '$ref': '#/components/responses/500'
+components:
+  schemas:
+    Timestamp:
+      type: object
+      properties:
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required: [createdAt, updatedAt]
+  responses:
+    '500':
+      description: 'Internal Server Error'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 500
+              error:
+                type: string
+                example: Internal Server Error
+              message:
+                type: string
+                example: We are sorry for the inconvenience. Please try again later
+    '400':
+      description: 'Bad Request'
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 400
+              error:
+                type: string
+                example: Bad Request
+              data:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    field:
+                      type: string
+                      example: email
+                    message:
+                      type: string
+                      example: Invalid email
+                    in:
+                      type: string
+                      enum: [query, body]
+                      example: body
+    '401':
+      description: Unauthorized
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 401
+              error:
+                type: string
+                example: Unauthorized
+              message:
+                type: string
+                example: You don't have the right permissions
+    '404':
+      description: Resource Not Found
+      content:
+        'application/json':
+          schema:
+            type: object
+            properties:
+              code:
+                type: integer
+                format: int32
+                example: 404
+              error:
+                type: string
+                example: Not Found
+              message:
+                type: string
+                example: Requested resource not found
