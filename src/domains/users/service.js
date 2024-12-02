@@ -1,98 +1,76 @@
+const userRepository = require('./repository');
+const apiResponse = require('../../libraries/utils/apiResponse');
 const User = require('./schema');
 
 // Get all users
-const getUsers = async (req, res, next) => {
+const findAll = async (req, res, next) => {
     try {
-        const userData = await User.find();
-
-        return res.status(200).json({
-            success: true,
-            message: 'Fetching all users',
-            length: userData.length,
-            users: userData,
-        });
+        return await userRepository.findAll();
     } catch (error) {
         next(error);
     }
 };
 
 // Get user
-const getUserById = async (req, res, next) => {
+const findById = async (req, res, next) => {
     try {
         const userId = req.params.id;
-        const userData = await User.findById(userId);
 
-        if (!userData) {
-            return res.status(404).json({ message: 'User not found' });
+        if (!userId) {
+            throw new Error('User id not found!');
         }
 
-        return res.status(200).json({
-            success: true,
-            message: 'Fetching user by id',
-            users: userData,
-        });
+        return await userRepository.findById(userId);
     } catch (error) {
         next(error);
     }
 };
 
-const createUsers = async (req, res, next) => {
+const create = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
 
         // user already exists
-        const existingUser = await User.findOne({ email });
+        const existingUser = await userRepository.findByOne(email);
         if (existingUser) {
-            return res.status(409).json({ message: 'User already exists' });
+            throw new Error(`User already exists!`);
         }
 
         // Create user.
-        const newUser = await User.create({ name, email, password });
-
-        return res.status(201).json({ message: 'User created successfully', user: newUser });
+        return await userRepository.create({ name, email, password });
     } catch (error) {
         next(error);
     }
 };
 
-const updateUser = async (req, res, next) => {
+const update = async (req, res, next) => {
     try {
         const { name, email, password } = req.body;
         const userId = req.params.id;
 
-        // user id not found
-        const user = await User.findById(userId);
+        const user = await userRepository.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User id not found' });
+            throw new Error('User not found!');
         }
 
-        // update user.
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { name, email, password },
-            { new: true },
-        );
-
-        return res.status(200).json({ message: 'User updated successfully', user: updatedUser });
+        // Update user.
+        return await userRepository.update(userId, { name, email, password });
     } catch (error) {
         next(error);
     }
 };
 
-const deleteUser = async (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
         const userId = req.params.id;
+        const user = await userRepository.findById(userId);
 
-        // user not found
-        const user = await User.findById(userId);
         if (!user) {
-            return res.status(404).json({ message: 'User not found' });
+            throw new Error('User not found!');
         }
 
-        // update user.
-        await User.findByIdAndDelete(userId);
-
-        return res.status(200).json({ message: 'User deleted successfully', user: null });
+        // Delete user.
+        return await userRepository.remove(userId);
     } catch (error) {
         next(error);
     }
@@ -100,11 +78,11 @@ const deleteUser = async (req, res, next) => {
 
 // Group functions in a single object
 const userService = {
-    getUsers,
-    getUserById,
-    createUsers,
-    updateUser,
-    deleteUser,
+    findAll,
+    findById,
+    create,
+    update,
+    remove,
 };
 
 // Export the service object
