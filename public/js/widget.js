@@ -5,7 +5,8 @@ const messageContainer = document.getElementById("messageContainer");
 const typingIndicator = document.getElementById("typingIndicator");
 
 // Use EJS to pass the server-side "name" variable to JavaScript
-const username = "<%= name %>";
+const chatWidget = document.querySelector('.chat-widget');
+const username = chatWidget.dataset.name;
 
 // Generate a random username for demo purposes
 // const username = 'User_' + Math.floor(Math.random() * 1000);
