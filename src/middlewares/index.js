@@ -5,7 +5,6 @@ const swaggerUI = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDoc = YAML.load('./swagger.yaml');
 
-
 const applyMiddleware = (app) => {
     app.use([express.json(), express.urlencoded({ extended: true }), compression(), helmet()]);
     // API Documentation
