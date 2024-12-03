@@ -1,3 +1,4 @@
+const errorHandler = require('../../libraries/error-handling');
 const userService = require('./service');
 
 // Get all users
