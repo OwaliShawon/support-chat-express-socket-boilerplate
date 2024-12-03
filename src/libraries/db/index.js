@@ -1,38 +1,30 @@
 const mongoose = require('mongoose');
-const Config = require('../../configs');
+const logger = require('../log/logger');
+
+const config = require('../../configs');
 
 const connectWithMongoDb = async () => {
-    const MONGODB_URI = Config.MONGODB_URI;
+    const MONGODB_URI = config.MONGODB_URI;
 
-    if (!MONGODB_URI) {
-        console.log('MONGODB_URI is undefined. Check your configuration.');
-        return;
-    }
+    logger.info('Connecting to MongoDB...');
+    mongoose.connection.once('open', () => {
+        logger.info('MongoDB connection is open');
+    });
+    mongoose.connection.on('error', error => {
+        logger.error('MongoDB connection error', error);
+    });
 
-    try {
-        mongoose.connection.once('open', () => {
-            console.log('MongoDB connection is open');
-        });
-
-        mongoose.connection.on('error', err => {
-            console.log('Error connecting to MongoDB: ', err);
-        });
-
-        await mongoose.connect(MONGODB_URI);
-
-        console.log('MongoDB connection established successfully');
-    } catch (error) {
-        console.log('MongoDB connection error: ', error);
-    }
+    await mongoose.connect(MONGODB_URI, {
+        autoIndex: true,
+        autoCreate: true,
+    });
+    logger.info('Connected to MongoDB');
 };
 
 const disconnectWithMongoDb = async () => {
-    try {
-        await mongoose.disconnect();
-        console.log('Disconnected from MongoDB');
-    } catch (error) {
-        console.log('Error disconnecting from MongoDB: ', error);
-    }
+    logger.info('Disconnecting from MongoDB...');
+    await mongoose.disconnect();
+    logger.info('Disconnected from MongoDB');
 };
 
 module.exports = { connectWithMongoDb, disconnectWithMongoDb };
