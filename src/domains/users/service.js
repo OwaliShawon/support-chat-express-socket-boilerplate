@@ -1,5 +1,4 @@
 const userRepository = require('./repository');
-const apiResponse = require('../../libraries/utils/apiResponse');
 const User = require('./schema');
 
 // Get all users

@@ -1,13 +1,10 @@
-const apiResponse = (res, status = 200, message, data = null, meta = null) => {
-    const response = {
-        status,
+const apiResponse = (code = 200, message, data = null, meta = null) => {
+    return {
+        code,
         message,
+        data,
+        meta,
     };
-
-    if (data) response.data = data;
-    if (meta) response.meta = meta;
-
-    return res.status(status).json(response);
 };
 
 module.exports = apiResponse;
