@@ -8,8 +8,8 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(logRequest({}), validateRequest({ schema: getUsersDto }), findAll) // GET /users
-    .post(logRequest({}), create); // POST /users
+    .get(findAll) // GET /users
+    .post(logRequest({}), validateRequest({ schema: getUsersDto }), create); // POST /users
 
 router
     .route('/:id')

@@ -1,3 +1,4 @@
+const { AppError } = require('../../libraries/error-handling/AppError');
 const userRepository = require('./repository');
 const User = require('./schema');
 
@@ -6,7 +7,7 @@ const findAll = async (req, res, next) => {
     try {
         return await userRepository.findAll();
     } catch (error) {
-        next(error);
+        throw error;
     }
 };
 
@@ -21,30 +22,31 @@ const findById = async (req, res, next) => {
 
         return await userRepository.findById(userId);
     } catch (error) {
-        next(error);
+        throw error;
     }
 };
 
 const create = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body;
+        const { username, email, password, room, user_type_id } = req.body;
 
-        // user already exists
-        const existingUser = await userRepository.findByOne(email);
-        if (existingUser) {
-            throw new Error(`User already exists!`);
+        // User already exists
+        const userExists = await userRepository.exists(email);
+
+        if (userExists) {
+            throw new AppError('UserExistsError', `User with email ${email} already exists!`, 409);
         }
 
         // Create user.
-        return await userRepository.create({ name, email, password });
+        return await userRepository.create({ username, email, password, room, user_type_id });
     } catch (error) {
-        next(error);
+        throw error;
     }
 };
 
 const update = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body;
+        const { username, email, password, room, user_type_id } = req.body;
         const userId = req.params.id;
 
         const user = await userRepository.findById(userId);
@@ -53,9 +55,15 @@ const update = async (req, res, next) => {
         }
 
         // Update user.
-        return await userRepository.update(userId, { name, email, password });
+        return await userRepository.update(userId, {
+            username,
+            email,
+            password,
+            room,
+            user_type_id,
+        });
     } catch (error) {
-        next(error);
+        throw error;
     }
 };
 
@@ -71,7 +79,7 @@ const remove = async (req, res, next) => {
         // Delete user.
         return await userRepository.remove(userId);
     } catch (error) {
-        next(error);
+        throw error;
     }
 };
 
@@ -79,6 +87,7 @@ const remove = async (req, res, next) => {
 const userService = {
     findAll,
     findById,
+
     create,
     update,
     remove,
