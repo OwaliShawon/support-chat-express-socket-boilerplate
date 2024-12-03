@@ -3,5 +3,18 @@
     "trailingComma": "all",
     "tabWidth": 4,
     "printWidth": 100,
-    "endOfLine": "lf"
+    "endOfLine": "lf",
+    "arrowParens": "avoid",
+    "useTabs": false,
+    "quoteProps": "as-needed",
+    "semi": true,
+    "bracketSpacing": true,
+    "htmlWhitespaceSensitivity": "css",
+    "insertPragma": false,
+    "jsxBracketSameLine": false,
+    "jsxSingleQuote": true,
+    "proseWrap": "preserve",
+    "requirePragma": false,
+    "vueIndentScriptAndStyle": false,
+    "embeddedLanguageFormatting": "auto"
 }

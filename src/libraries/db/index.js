@@ -3,7 +3,7 @@ const Config = require('../../configs');
 
 const connectWithMongoDb = async () => {
     const MONGODB_URI = Config.MONGODB_URI;
-    console.log(MONGODB_URI);
+
     if (!MONGODB_URI) {
         console.log('MONGODB_URI is undefined. Check your configuration.');
         return;
@@ -14,7 +14,7 @@ const connectWithMongoDb = async () => {
             console.log('MongoDB connection is open');
         });
 
-        mongoose.connection.on('error', (err) => {
+        mongoose.connection.on('error', err => {
             console.log('Error connecting to MongoDB: ', err);
         });
 
