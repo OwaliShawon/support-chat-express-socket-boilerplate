@@ -1,5 +1,6 @@
 const express = require('express');
 const userRoutes = require('./domains/users/routes');
+const { AppError } = require('./libraries/error-handling/AppError');
 
 const apiRouter = express.Router();
 
@@ -18,5 +19,10 @@ module.exports = (app) => {
     // Widget route
     app.get('/widget', (req, res) => {
         res.render('widget', { name: req.query.name });
+    });
+
+    // Fallback for unhandled routes
+    app.use('*', (req, res, next) => {
+        next(new AppError('NotFoundError', 'Route not found', 404));
     });
 };
