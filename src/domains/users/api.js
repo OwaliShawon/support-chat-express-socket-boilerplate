@@ -1,54 +1,64 @@
-const errorHandler = require('../../libraries/error-handling');
+const apiResponse = require('../../libraries/utils/apiResponse');
 const userService = require('./service');
 
 // Get all users
-const getUsers = async (req, res, next) => {
+const findAll = async (req, res, next) => {
     try {
-        await userService.getUsers(req, res, next);
+        const users = await userService.findAll(req, res, next);
+
+        return res.status(200).json(apiResponse(200, 'Fetching all users', users));
     } catch (error) {
         next(error);
     }
 };
 
-const getUser = async (req, res, next) => {
+const findById = async (req, res, next) => {
     try {
-        await userService.getUserById(req, res, next);
+        const user = await userService.findById(req, res, next);
+
+        return res.status(200).json(apiResponse(200, 'Fetching user', user));
     } catch (error) {
         next(error);
     }
 };
 
 // Create a user
-const createUser = async (req, res, next) => {
+const create = async (req, res, next) => {
     try {
-        await userService.createUsers(req, res, next);
+        const user = await userService.create(req, res, next);
+
+        return res.status(201).json(apiResponse(201, 'User created successfully', user));
     } catch (error) {
         next(error);
     }
 };
 
 // Update user
-const updateUser = async (req, res, next) => {
+const update = async (req, res, next) => {
     try {
-        await userService.updateUser(req, res, next);
+        const updateUser = await userService.update(req, res, next);
+
+        return res.status(200).json(apiResponse(200, 'User updated successfully', updateUser));
     } catch (error) {
         next(error);
     }
 };
 
 // Delete user
-const deleteUser = async (req, res, next) => {
+const remove = async (req, res, next) => {
     try {
-        await userService.deleteUser(req, res, next);
+        const user = await userService.remove(req, res, next);
+
+        return res.status(200).json(apiResponse(200, 'User deleted successfully', user));
     } catch (error) {
         next(error);
     }
 };
 
 module.exports = {
-    getUsers,
-    getUser,
-    createUser,
-    updateUser,
-    deleteUser,
+    findAll,
+    findById,
+    create,
+    update,
+    remove,
 };
