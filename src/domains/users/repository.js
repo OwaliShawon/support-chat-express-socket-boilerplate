@@ -8,8 +8,8 @@ const findById = async (id) => {
     return await User.findById(id);
 };
 
-const findByOne = async (email) => {
-    return await User.findOne({ email });
+const exists = async (email) => {
+    return await User.exists({ email });
 };
 
 const create = async (payload) => {
@@ -27,7 +27,7 @@ const remove = async (id) => {
 const userRepository = {
     findAll,
     findById,
-    findByOne,
+    exists,
     create,
     update,
     remove,
