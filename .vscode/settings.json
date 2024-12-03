@@ -1,3 +1,9 @@
 {
-    "cSpell.words": ["ADMINPASSWORD", "ADMINUSERNAME", "BASICAUTH", "INITDB"]
+    "cSpell.words": [
+        "ADMINPASSWORD",
+        "ADMINUSERNAME",
+        "BASICAUTH",
+        "INITDB",
+        "MONGOINSTANCE"
+    ]
 }
