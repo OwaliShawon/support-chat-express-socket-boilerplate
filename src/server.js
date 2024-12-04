@@ -5,8 +5,9 @@ const { Server } = require('socket.io');
 const { connectSocket } = require('./socket');
 const { connectWithMongoDb } = require('./libraries/db');
 const logger = require('./libraries/log/logger');
+const Config = require('./configs');
 
-const PORT = process.env.PORT || 3000;
+const PORT = Config.PORT || 3000;
 
 let server;
 
