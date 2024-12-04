@@ -1,4 +1,5 @@
 const { AppError } = require('../../libraries/error-handling/AppError');
+const logger = require('../../libraries/log/logger');
 const userRepository = require('./repository');
 const User = require('./schema');
 
@@ -12,68 +13,67 @@ const findAll = async (req, res, next) => {
 };
 
 // Get user
-const findById = async (req, res, next) => {
+const findById = async (userId) => {
     try {
-        const userId = req.params.id;
-
-        if (!userId) {
-            throw new Error('User id not found!');
+        const response = await userRepository.findById(userId);
+        if (!response) {
+            throw new AppError(404, 'User not found');
         }
-
-        return await userRepository.findById(userId);
+        return response;
     } catch (error) {
         throw error;
     }
 };
 
-const create = async (req, res, next) => {
+const create = async (data) => {
     try {
-        const { username, email, password, room, user_type_id } = req.body;
-
-        // User already exists
-        const userExists = await userRepository.exists(email);
-
-        if (userExists) {
-            throw new AppError('UserExistsError', `User with email ${email} already exists!`, 409);
-        }
+        logger.info('data*********', data);
+        const { userTypeId, profileId, isOnline, username, chat, lastActivity } = data;
 
         // Create user.
-        return await userRepository.create({ username, email, password, room, user_type_id });
-    } catch (error) {
-        throw error;
-    }
-};
-
-const update = async (req, res, next) => {
-    try {
-        const { username, email, password, room, user_type_id } = req.body;
-        const userId = req.params.id;
-
-        const user = await userRepository.findById(userId);
-        if (!user) {
-            throw new Error('User not found!');
-        }
-
-        // Update user.
-        return await userRepository.update(userId, {
+        return await userRepository.create({
+            userTypeId,
+            profileId,
+            isOnline,
             username,
-            email,
-            password,
-            room,
-            user_type_id,
+            chat,
+            lastActivity,
         });
     } catch (error) {
         throw error;
     }
 };
 
-const remove = async (req, res, next) => {
+const update = async (data) => {
     try {
-        const userId = req.params.id;
-        const user = await userRepository.findById(userId);
+        const { userTypeId, profileId, isOnline, username, chat, lastActivity } = data;
 
-        if (!user) {
-            throw new Error('User not found!');
+        const response = await userRepository.findById(data.userId);
+        if (!response) {
+            throw new AppError(404, 'User not found');
+        }
+
+        // Update user.
+        return await userRepository.update(data.userId, {
+            userTypeId,
+            profileId,
+            isOnline,
+            username,
+            chat,
+            lastActivity,
+        });
+    } catch (error) {
+        throw error;
+    }
+};
+
+const remove = async (userId) => {
+    console.log('userId userId******', userId);
+    try {
+        const response = await userRepository.findById(userId);
+
+        if (!response) {
+            throw new AppError(404, 'User not found');
         }
 
         // Delete user.

@@ -1,13 +1,19 @@
 const Joi = require('joi');
 
 const getUsersDto = Joi.object({
-    username: Joi.string().min(3).max(30).required(),
-    email: Joi.string()
-        .email({ minDomainSegments: 2, tlds: { allow: ['com', 'net', 'ai'] } })
-        .required(),
-    password: Joi.string().min(6).required(),
-    room: Joi.string().min(1).required(),
-    user_type_id: Joi.string().required(),
+    username: Joi.string().required(),
+    userTypeId: Joi.string().required(),
+    profileId: Joi.string().required(),
+    isOnline: Joi.boolean().optional(),
+    chat: Joi.string().required(),
+    lastActivity: Joi.date().greater('now'),
 });
 
-module.exports = getUsersDto;
+const userIdDto = Joi.object({
+    id: Joi.string().required(),
+});
+
+module.exports = {
+    getUsersDto,
+    userIdDto,
+};
