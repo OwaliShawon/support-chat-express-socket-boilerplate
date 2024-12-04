@@ -13,6 +13,7 @@ const exists = async (email) => {
 };
 
 const create = async (payload) => {
+    console.log('payload******', payload);
     return await User.create(payload);
 };
 

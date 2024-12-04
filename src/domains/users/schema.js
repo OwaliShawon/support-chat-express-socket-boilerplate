@@ -1,31 +1,31 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
     {
         username: {
             type: String,
-            required: [true, 'username field is required*'],
-        },
-        email: {
-            type: String,
             unique: true,
-            required: [true, 'Email field is required*'],
+            required: [true, 'Username is required*'],
         },
-        password: {
+        userTypeId: {
             type: String,
-            trim: true,
-            required: [true, 'Password field is required*'],
-            minLength: [6, 'Password must be at least 6 characters!'],
-            set: (v) => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
+            required: [true, 'User type ID is required*'],
         },
-        room: {
+        profileId: {
             type: String,
-            required: [true, 'Room field is required*'],
+            required: [true, 'Profile ID is required*'],
         },
-        user_type_id: {
+        isOnline: {
+            type: Boolean,
+            default: false,
+        },
+        chat: {
             type: String,
-            required: [true, 'User type field is required*'],
+            required: [true, 'Chats field is required*'],
+        },
+        lastActivity: {
+            type: Date,
+            default: Date.now(),
         },
     },
     { timestamps: true },

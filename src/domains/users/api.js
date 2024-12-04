@@ -4,9 +4,9 @@ const userService = require('./service');
 // Get all users
 const findAll = async (req, res, next) => {
     try {
-        const users = await userService.findAll(req, res, next);
+        const response = await userService.findAll();
 
-        return res.status(200).json(apiResponse(200, 'Fetching all users', users));
+        return res.status(200).json(apiResponse(200, 'Fetching all users', response));
     } catch (error) {
         next(error);
     }
@@ -14,9 +14,10 @@ const findAll = async (req, res, next) => {
 
 const findById = async (req, res, next) => {
     try {
-        const user = await userService.findById(req, res, next);
+        const userId = req.params.id;
+        const response = await userService.findById(userId);
 
-        return res.status(200).json(apiResponse(200, 'Fetching user', user));
+        return res.status(200).json(apiResponse(200, 'Fetching user', response));
     } catch (error) {
         next(error);
     }
@@ -25,9 +26,9 @@ const findById = async (req, res, next) => {
 // Create a user
 const create = async (req, res, next) => {
     try {
-        const user = await userService.create(req, res, next);
+        const response = await userService.create({ ...req.body });
 
-        return res.status(201).json(apiResponse(201, 'User created successfully', user));
+        return res.status(201).json(apiResponse(201, 'User created successfully', response));
     } catch (error) {
         next(error);
     }
@@ -36,9 +37,9 @@ const create = async (req, res, next) => {
 // Update user
 const update = async (req, res, next) => {
     try {
-        const updateUser = await userService.update(req, res, next);
+        const response = await userService.update({ ...req.body, userId: req.params.id });
 
-        return res.status(200).json(apiResponse(200, 'User updated successfully', updateUser));
+        return res.status(200).json(apiResponse(200, 'User updated successfully', response));
     } catch (error) {
         next(error);
     }
@@ -47,9 +48,9 @@ const update = async (req, res, next) => {
 // Delete user
 const remove = async (req, res, next) => {
     try {
-        const user = await userService.remove(req, res, next);
+        await userService.remove(req.params.id);
 
-        return res.status(200).json(apiResponse(200, 'User deleted successfully', user));
+        return res.status(200).json(apiResponse(200, 'User deleted successfully', null));
     } catch (error) {
         next(error);
     }
