@@ -11,10 +11,11 @@ const createDomain = async (domainName) => {
     // Create the files
     await Promise.all([
         $`touch ${domainName}/api.js`,
+        $`touch ${domainName}/dto.js`,
         $`touch ${domainName}/event.js`,
         $`touch ${domainName}/index.js`,
+        $`touch ${domainName}/repository.js`,
         $`touch ${domainName}/routes.js`,
-        $`touch ${domainName}/dto.js`,
         $`touch ${domainName}/schema.js`,
         $`touch ${domainName}/service.js`,
     ]);
