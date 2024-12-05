@@ -1,13 +1,15 @@
 const express = require('express');
 const userRoutes = require('./domains/users/routes');
+const authRoutes = require('./domains/auth/routes');
 const { AppError } = require('./libraries/error-handling/AppError');
 
 const apiRouter = express.Router();
 
 // Attach domain routes
 apiRouter.use('/users', userRoutes);
+apiRouter.use('/auth', authRoutes);
 
-module.exports = (app) => {
+module.exports = app => {
     // API routes
     app.use('/api/v1', apiRouter);
 
