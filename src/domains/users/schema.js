@@ -16,8 +16,8 @@ const userSchema = new mongoose.Schema(
         },
         userType: {
             type: String,
-            enum: ['SUPER_ADMIN', 'SUPPORT_AGENT'],
-            default: 'SUPER_ADMIN',
+            enum: ['SUPER_ADMIN', 'SUPPORT_AGENT', 'USER', 'VISITOR'],
+            default: 'USER',
         },
         profileId: {
             type: String,
@@ -40,7 +40,7 @@ const userSchema = new mongoose.Schema(
             default: Date.now(),
         },
     },
-    { timestamps: true },
+    { timestamps: true, id: true },
 );
 
 userSchema.methods.comparePassword = function (candidatePassword) {
