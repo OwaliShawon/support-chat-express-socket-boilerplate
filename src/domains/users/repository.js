@@ -8,6 +8,10 @@ const findById = async id => {
     return await User.findById(id);
 };
 
+const findOneByUsername = async username => {
+    return await User.findOne({ username });
+};
+
 const exists = async username => {
     return await User.exists({ username });
 };
@@ -27,6 +31,7 @@ const remove = async id => {
 const userRepository = {
     findAll,
     findById,
+    findOneByUsername,
     exists,
     create,
     update,
