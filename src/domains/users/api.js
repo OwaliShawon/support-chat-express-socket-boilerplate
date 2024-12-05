@@ -26,7 +26,7 @@ const findById = async (req, res, next) => {
 // Create a user
 const create = async (req, res, next) => {
     try {
-        const response = await userService.create({ ...req.body });
+        const response = await userService.create(req.body);
 
         return res.status(201).json(apiResponse(201, 'User created successfully', response));
     } catch (error) {
