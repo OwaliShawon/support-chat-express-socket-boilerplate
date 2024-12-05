@@ -1,12 +1,28 @@
 const Joi = require('joi');
 
-const getUsersDto = Joi.object({
-    username: Joi.string().required(),
-    userTypeId: Joi.string().required(),
-    profileId: Joi.string().required(),
+const baseUserDto = Joi.object({
+    userType: Joi.string().valid('SUPER_ADMIN', 'SUPPORT_AGENT').optional(),
+    profileId: Joi.string().optional(),
     isOnline: Joi.boolean().optional(),
-    chat: Joi.string().required(),
+
+    chats: Joi.array()
+        .items(
+            Joi.object({
+                message: Joi.string().optional(),
+            }),
+        )
+        .optional(),
     lastActivity: Joi.date().greater('now'),
+});
+
+const createUserDto = baseUserDto.append({
+    username: Joi.string().required(),
+    password: Joi.string().min(6).required(),
+});
+
+const updateUserDto = baseUserDto.append({
+    username: Joi.string().optional(),
+    password: Joi.string().min(6).optional(),
 });
 
 const userIdDto = Joi.object({
@@ -14,6 +30,7 @@ const userIdDto = Joi.object({
 });
 
 module.exports = {
-    getUsersDto,
+    createUserDto,
+    updateUserDto,
     userIdDto,
 };
