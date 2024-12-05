@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
     {
@@ -7,22 +8,33 @@ const userSchema = new mongoose.Schema(
             unique: true,
             required: [true, 'Username is required*'],
         },
-        userTypeId: {
+        password: {
             type: String,
-            required: [true, 'User type ID is required*'],
+            minlength: 6,
+            required: [true, 'Password is required*'],
+            set: v => bcrypt.hashSync(v, bcrypt.genSaltSync(10)),
+        },
+        userType: {
+            type: String,
+            enum: ['SUPER_ADMIN', 'SUPPORT_AGENT'],
+            default: 'SUPER_ADMIN',
         },
         profileId: {
             type: String,
-            required: [true, 'Profile ID is required*'],
+            ref: 'Profile',
+            required: [false, 'Profile is required*'],
         },
         isOnline: {
             type: Boolean,
             default: false,
         },
-        chat: {
-            type: String,
-            required: [true, 'Chats field is required*'],
-        },
+        chats: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                unique: true,
+                ref: 'Chat',
+            },
+        ],
         lastActivity: {
             type: Date,
             default: Date.now(),
@@ -30,6 +42,10 @@ const userSchema = new mongoose.Schema(
     },
     { timestamps: true },
 );
+
+userSchema.methods.comparePassword = function (candidatePassword) {
+    return bcrypt.compare(candidatePassword, this.password);
+};
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;

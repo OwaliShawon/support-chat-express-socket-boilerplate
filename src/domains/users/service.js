@@ -1,7 +1,6 @@
 const { AppError } = require('../../libraries/error-handling/AppError');
 const logger = require('../../libraries/log/logger');
 const userRepository = require('./repository');
-const User = require('./schema');
 
 // Get all users
 const findAll = async (req, res, next) => {
@@ -13,7 +12,7 @@ const findAll = async (req, res, next) => {
 };
 
 // Get user
-const findById = async (userId) => {
+const findById = async userId => {
     try {
         const response = await userRepository.findById(userId);
         if (!response) {
@@ -25,73 +24,58 @@ const findById = async (userId) => {
     }
 };
 
-const create = async (data) => {
+// Create a user
+const create = async data => {
     try {
-        logger.info('data*********', data);
-        const { userTypeId, profileId, isOnline, username, chat, lastActivity } = data;
+        const { username, password } = data;
 
-        // Create user.
-        return await userRepository.create({
-            userTypeId,
-            profileId,
-            isOnline,
-            username,
-            chat,
-            lastActivity,
-        });
-    } catch (error) {
-        throw error;
-    }
-};
+        const exists = await userRepository.exists(username);
 
-const update = async (data) => {
-    try {
-        const { userTypeId, profileId, isOnline, username, chat, lastActivity } = data;
-
-        const response = await userRepository.findById(data.userId);
-        if (!response) {
-            throw new AppError(404, 'User not found');
+        if (exists) {
+            throw new AppError('UserNotFound', 'User already exists', 404);
         }
 
-        // Update user.
-        return await userRepository.update(data.userId, {
-            userTypeId,
-            profileId,
-            isOnline,
+        return await userRepository.create({
             username,
-            chat,
-            lastActivity,
+            password,
         });
     } catch (error) {
         throw error;
     }
 };
 
-const remove = async (userId) => {
+// Update user
+const update = async data => {
+    const user = await userRepository.findById(data?.userId);
+    if (!user) {
+        throw new AppError(404, 'User not found');
+    }
+
+    return await userRepository.update(data?.userId, data);
+};
+
+// Delete user
+const remove = async userId => {
     console.log('userId userId******', userId);
     try {
         const response = await userRepository.findById(userId);
 
         if (!response) {
-            throw new AppError(404, 'User not found');
+            throw new AppError('UserNotFound', 'User already exists', 404);
         }
 
-        // Delete user.
         return await userRepository.remove(userId);
     } catch (error) {
         throw error;
     }
 };
 
-// Group functions in a single object
 const userService = {
     findAll,
     findById,
-
     create,
     update,
     remove,
 };
 
-// Export the service object
 module.exports = userService;
