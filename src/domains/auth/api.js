@@ -6,10 +6,7 @@ const model = 'Auth';
 
 const register = async (req, res, next) => {
     try {
-        console.log('object registration');
-        //TODO: call create user
-        await userService.create({ ...req.body });
-        await authService.findAll();
+        await authService.register(req.body);
         return res.status(201).json(apiResponse(201, `Register successfully`, 'into registration'));
     } catch (error) {
         next(error);

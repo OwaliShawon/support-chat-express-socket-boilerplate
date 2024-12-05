@@ -1,7 +1,7 @@
 const Joi = require('joi');
-const { getUsersDto } = require('../users/dto');
+const { createUserDto } = require('../users/dto');
 
-const registerDto = getUsersDto.append({});
+const registerDto = createUserDto.append({});
 
 const loginDto = Joi.object({
     username: Joi.string().required(),

@@ -1,7 +1,9 @@
+const userService = require('../users/service');
+
 const authService = {
-    register: async (req, res, next) => {
+    register: async data => {
         try {
-            return;
+            await userService.create(data);
         } catch (error) {
             throw error;
         }
