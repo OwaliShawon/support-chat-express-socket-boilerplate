@@ -8,13 +8,13 @@ const router = express.Router();
 
 router
     .route('/')
-    .get(findAll) // GET /users
-    .post(logRequest({}), validateRequest({ schema: createUserDto }), create); // POST /users
+    .get(findAll)
+    .post(validateRequest({ schema: createUserDto }), create);
 
 router
     .route('/:id', validateRequest({ schema: userIdDto }, true))
-    .get(logRequest({}), findById) // GET /user:id
-    .patch(logRequest({}), validateRequest({ schema: updateUserDto }), update) // PATCH /user:id
-    .delete(logRequest({}), remove); // DELETE /user:id
+    .get(findById)
+    .patch(validateRequest({ schema: updateUserDto }), update)
+    .delete(remove);
 
 module.exports = router;
